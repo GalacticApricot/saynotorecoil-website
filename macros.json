@@ -1,0 +1,8 @@
+[
+  {
+    "path": "Universal/Generic",
+    "name": "NoRecoil",
+    "description": "Base ant-recoil script that pulls down while shooting",
+    "base": 0.5
+  }
+]

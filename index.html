@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Say No To Recoil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d;
+      --surface: #0f1114;
+      --card: #141619;
+      --border: #1e2228;
+      --accent: #ff3c00;
+      --accent2: #ff7a00;
+      --text: #d4d8df;
+      --muted: #5a6070;
+      --cat-line: #ff3c0022;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,60,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,60,0,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 60px 40px 40px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #0d0e10 0%, transparent 100%);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 8vw, 96px);
+      letter-spacing: 4px;
+      line-height: 0.9;
+      background: linear-gradient(135deg, #ff3c00 0%, #ff7a00 60%, #ffaa00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .logo-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 6px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .logo-sub span {
+      color: var(--accent);
+    }
+
+    .header-desc {
+      margin-top: 20px;
+      font-size: 17px;
+      color: var(--muted);
+      font-weight: 600;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 40px 100px;
+    }
+
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .category-block {
+      margin-bottom: 50px;
+    }
+
+    .category-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .category-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 32px;
+      background: linear-gradient(180deg, var(--accent), transparent);
+      border-radius: 2px;
+    }
+
+    .subcategory-block {
+      margin-left: 20px;
+      margin-top: 20px;
+    }
+
+    .subcategory-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .macro-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    .macro-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 20px 22px;
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+    }
+
+    .macro-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,60,0,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .macro-card:hover {
+      border-color: var(--accent);
+      border-left-color: var(--accent2);
+      background: #181a1e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255,60,0,0.15);
+    }
+
+    .macro-card:hover::before {
+      opacity: 1;
+    }
+
+    .macro-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .macro-desc {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .macro-path {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 12px;
+      opacity: 0.7;
+    }
+
+    .macro-arrow {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s, right 0.2s;
+    }
+
+    .macro-card:hover .macro-arrow {
+      opacity: 1;
+      right: 12px;
+    }
+
+    .count-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      background: rgba(255,60,0,0.1);
+      border: 1px solid rgba(255,60,0,0.2);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 2px;
+      margin-left: auto;
+    }
+
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 30px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      border-top: 1px solid var(--border);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .category-block {
+      animation: fadeInUp 0.4s ease both;
+    }
+
+    .category-block:nth-child(1) { animation-delay: 0.1s; }
+    .category-block:nth-child(2) { animation-delay: 0.2s; }
+    .category-block:nth-child(3) { animation-delay: 0.3s; }
+    .category-block:nth-child(4) { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">SAY NO<br>TO RECOIL</div>
+      <div class="logo-sub">MACRO LIBRARY <span>// v2.0</span></div>
+      <p class="header-desc">Download precision-tuned recoil control macros. Adjust sensitivity to match your setup.</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="section-label">Available Macros</div>
+    <div id="macro-list"></div>
+  </main>
+
+  <footer>SNTR &mdash; SAY NO TO RECOIL &mdash; ALL MACROS FOR EDUCATIONAL USE</footer>
+
+  <script>
+    async function loadMacros() {
+      const res = await fetch('macros.json');
+      const macros = await res.json();
+
+      // Group by category -> subcategory
+      const tree = {};
+      macros.forEach((m, i) => {
+        const parts = m.path.split('/');
+        const cat = parts[0];
+        const sub = parts[1] || 'General';
+        if (!tree[cat]) tree[cat] = {};
+        if (!tree[cat][sub]) tree[cat][sub] = [];
+        tree[cat][sub].push({ ...m, index: i });
+      });
+
+      const container = document.getElementById('macro-list');
+
+      Object.entries(tree).forEach(([cat, subs]) => {
+        const catBlock = document.createElement('div');
+        catBlock.className = 'category-block';
+
+        const catTotal = Object.values(subs).reduce((a, b) => a + b.length, 0);
+        catBlock.innerHTML = `
+          <div class="category-title">
+            ${cat}
+            <span class="count-badge">${catTotal} MACROS</span>
+          </div>
+        `;
+
+        Object.entries(subs).forEach(([sub, items]) => {
+          const subBlock = document.createElement('div');
+          subBlock.className = 'subcategory-block';
+          subBlock.innerHTML = `<div class="subcategory-title">${sub}</div>`;
+
+          const grid = document.createElement('div');
+          grid.className = 'macro-grid';
+
+          items.forEach(m => {
+            const a = document.createElement('a');
+            a.className = 'macro-card';
+            a.href = `macro.html?index=${m.index}`;
+            a.innerHTML = `
+              <div class="macro-name">${m.name}</div>
+              <div class="macro-desc">${m.description}</div>
+              <div class="macro-path">${m.path}/${m.name}.xml</div>
+              <div class="macro-arrow">→</div>
+            `;
+            grid.appendChild(a);
+          });
+
+          subBlock.appendChild(grid);
+          catBlock.appendChild(subBlock);
+        });
+
+        container.appendChild(catBlock);
+      });
+    }
+
+    loadMacros();
+  </script>
+</body>
+</html>

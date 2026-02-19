@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Say No To Recoil — Macro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d;
+      --surface: #0f1114;
+      --card: #141619;
+      --border: #1e2228;
+      --accent: #ff3c00;
+      --accent2: #ff7a00;
+      --text: #d4d8df;
+      --muted: #5a6070;
+      --green: #00ff88;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,60,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,60,0,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 28px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back-link {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    .logo-small {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #ff3c00, #ff7a00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 40px 100px;
+    }
+
+    .macro-header {
+      margin-bottom: 48px;
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .macro-breadcrumb {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 3px;
+      margin-bottom: 14px;
+    }
+
+    .macro-breadcrumb span { color: var(--accent); }
+
+    .macro-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      letter-spacing: 3px;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .macro-desc {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .xml-filename {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: 14px;
+      background: rgba(255,60,0,0.08);
+      border: 1px solid rgba(255,60,0,0.15);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 2px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 36px;
+      margin-bottom: 24px;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+      animation: fadeInUp 0.4s ease both;
+    }
+
+    .panel:nth-child(1) { animation-delay: 0.1s; }
+    .panel:nth-child(2) { animation-delay: 0.2s; }
+    .panel:nth-child(3) { animation-delay: 0.3s; }
+
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .instruction-box {
+      background: rgba(255,60,0,0.05);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .instruction-box p {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .instruction-box .tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: var(--accent2);
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* Slider */
+    .slider-container {
+      position: relative;
+      padding: 10px 0;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .slider-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    .label-low { color: var(--green); }
+    .label-high { color: var(--accent); }
+
+    .sens-track {
+      position: relative;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .sens-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--accent));
+      border-radius: 4px;
+      transition: width 0.05s;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      margin: 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      background: #fff;
+      border: 3px solid var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255,60,0,0.5);
+      transition: box-shadow 0.2s, transform 0.2s;
+      margin-top: -9px;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 4px;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 26px;
+      height: 26px;
+      background: #fff;
+      border: 3px solid var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255,60,0,0.5);
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb {
+      box-shadow: 0 0 24px rgba(255,60,0,0.8);
+      transform: scale(1.1);
+    }
+
+    .sens-value-display {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .sens-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+
+    .sens-number-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 3px;
+      margin-top: 4px;
+    }
+
+    .multiplier-display {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 22px;
+    }
+
+    .mult-stat {
+      text-align: center;
+    }
+
+    .mult-stat-val {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 18px;
+      color: var(--accent2);
+    }
+
+    .mult-stat-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    /* Preview panel */
+    .preview-table {
+      width: 100%;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      border-collapse: collapse;
+      color: var(--text);
+    }
+
+    .preview-table th {
+      text-align: left;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .preview-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(30,34,40,0.5);
+    }
+
+    .preview-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .y-orig { color: var(--muted); }
+    .y-new { color: var(--green); font-weight: 700; }
+    .y-changed { color: var(--accent2); }
+
+    /* Download */
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 4px;
+      border: none;
+      cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .download-btn:hover {
+      background: linear-gradient(135deg, var(--accent2) 0%, #ffaa00 100%);
+      box-shadow: 0 8px 40px rgba(255,60,0,0.4);
+      transform: translateY(-2px);
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 80px 40px;
+    }
+
+    .error-state h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .error-state p {
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-link">← BACK</a>
+    <div style="width:1px;height:20px;background:var(--border);"></div>
+    <div class="logo-small">SAY NO TO RECOIL</div>
+  </header>
+
+  <main id="main">
+    <div class="error-state" id="loading">
+      <p style="color:var(--muted);font-family:'Share Tech Mono',monospace;letter-spacing:3px;">LOADING...</p>
+    </div>
+  </main>
+
+  <script>
+    // ===================== XML TEMPLATE =====================
+    // This generates a representative XML structure using the macro's base settings
+    // The y-values in the buffers represent a vertical recoil pattern
+    function generateBaseXML(macroName, baseVal) {
+      // Generate a recoil pattern of ~20 buffers
+      // The "step" between y values represents recoil — at base sensitivity, use a moderate step
+      // We'll store the base y-values as a sequence
+      const steps = generateRecoilSteps(baseVal, 1.0); // multiplier = 1 at base
+      const guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+
+      let buffers = '';
+      let y = 300;
+      let time = 0;
+      steps.forEach((step, i) => {
+        y += step;
+        buffers += `         <Buffer>\n            <x>656</x>\n            <y>${Math.round(y)}</y>\n            <time>${i === 0 ? 0 : (10 + Math.random() * 2).toFixed(3)}</time>\n         </Buffer>\n`;
+      });
+
+      return `<Macro>
+   <Name>${macroName}</Name>
+   <MacroEvents>
+      <MacroEvent>
+         <Type>actionBar</Type>
+         <recordProfile>
+            <mmtSetting>2</mmtSetting>
+         </recordProfile>
+         <selected>false</selected>
+      </MacroEvent>
+      <MacroEvent>
+         <Type>3</Type>
+         <Id/>
+         <Number>${baseVal.toFixed(3)}</Number>
+         <MouseEvent>
+${buffers}
+         </MouseEvent>
+      </MacroEvent>
+   </MacroEvents>
+   <DelaySetting>0</DelaySetting>
+   <Guid>${guid}</Guid>
+   <Version>4</Version>
+   <MouseMoveType>foreground</MouseMoveType>
+</Macro>`;
+    }
+
+    function generateRecoilSteps(baseVal, multiplier) {
+      // Higher base = more recoil steps per movement
+      // We'll create 20 movement steps that simulate a recoil pattern
+      const count = 20;
+      const steps = [];
+      for (let i = 0; i < count; i++) {
+        // Sinusoidal recoil pattern: mostly upward (positive y in screen coords = down, but recoil goes up screen = smaller y)
+        // We represent the raw step difference — base sensitivity determines how large these are
+        const wave = Math.sin(i * 0.4) * 0.3;
+        const baseStep = Math.round((1 + wave) * (baseVal * 5 + 1));
+        steps.push(Math.max(1, Math.round(baseStep * multiplier)));
+      }
+      return steps;
+    }
+
+    // ===================== PARSE & MODIFY XML =====================
+    function parseAndModifyXML(xmlString, multiplier) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xmlString, 'text/xml');
+      const buffers = doc.querySelectorAll('MouseEvent > Buffer');
+
+      if (buffers.length === 0) return { xml: xmlString, preview: [] };
+
+      // Collect all y values
+      const yEls = Array.from(buffers).map(b => b.querySelector('y'));
+      const yVals = yEls.map(el => parseInt(el.textContent));
+
+      // Compute diffs between consecutive y values
+      const diffs = [];
+      for (let i = 1; i < yVals.length; i++) {
+        diffs.push(yVals[i] - yVals[i - 1]);
+      }
+
+      // Scale diffs by multiplier and reconstruct
+      const preview = [{ orig: yVals[0], modified: yVals[0], diff: null }];
+      let currentY = yVals[0];
+
+      for (let i = 0; i < diffs.length; i++) {
+        const scaledDiff = Math.round(diffs[i] * multiplier);
+        currentY += scaledDiff;
+        const newY = currentY;
+        preview.push({ orig: yVals[i + 1], modified: newY, diff: scaledDiff });
+        yEls[i + 1].textContent = newY;
+      }
+
+      // Serialize back
+      const serializer = new XMLSerializer();
+      let modified = serializer.serializeToString(doc);
+      // Clean up namespace artifacts from DOMParser
+      modified = modified.replace(/ xmlns(?::\w+)?="[^"]*"/g, '');
+      modified = modified.replace(/^<\?xml[^>]*\?>\s*/, '');
+
+      return { xml: modified, preview };
+    }
+
+    // ===================== MAIN =====================
+    async function init() {
+      const params = new URLSearchParams(location.search);
+      const idx = parseInt(params.get('index'));
+
+      const res = await fetch('macros.json');
+      const macros = await res.json();
+
+      if (isNaN(idx) || idx < 0 || idx >= macros.length) {
+        document.getElementById('main').innerHTML = `
+          <div class="error-state">
+            <h2>MACRO NOT FOUND</h2>
+            <p><a href="index.html" style="color:var(--accent)">← Return to library</a></p>
+          </div>`;
+        return;
+      }
+
+      const macro = macros[idx];
+      const filename = `${macro.name}.xml`;
+
+      // Generate the base XML
+      const baseXML = generateBaseXML(macro.name, macro.base);
+      let currentMultiplier = 1.0;
+      let currentXML = baseXML;
+
+      // Build UI
+      document.getElementById('main').innerHTML = `
+        <div class="macro-header">
+          <div class="macro-breadcrumb">${macro.path.split('/').join(' <span>//</span> ')}</div>
+          <div class="macro-title">${macro.name}</div>
+          <div class="macro-desc">${macro.description}</div>
+          <div class="xml-filename">📄 ${filename}</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Sensitivity Adjustment</div>
+          <div class="instruction-box">
+            <p>Set the slider to match your in-game mouse sensitivity.</p>
+            <span class="tag">
+              LOW = slow sensitivity / low DPI &nbsp;|&nbsp; HIGH = fast sensitivity / high DPI
+            </span>
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-labels">
+              <span class="slider-label label-low">LOW</span>
+              <span class="slider-label label-high">HIGH</span>
+            </div>
+            <div class="sens-track">
+              <div class="sens-fill" id="sensFill" style="width:${macro.base * 100}%"></div>
+            </div>
+            <input type="range" id="sensSlider" min="1" max="100" value="${Math.round(macro.base * 100)}" />
+          </div>
+
+          <div class="sens-value-display">
+            <div class="sens-number" id="sensDisplay" style="color: #fff;">${Math.round(macro.base * 100)}</div>
+            <div class="sens-number-label">SENSITIVITY LEVEL</div>
+            <div class="multiplier-display">
+              <div class="mult-stat">
+                <div class="mult-stat-val" id="multDisplay">1.00×</div>
+                <div class="mult-stat-label">Y MULTIPLIER</div>
+              </div>
+              <div class="mult-stat">
+                <div class="mult-stat-val" id="baseDisplay">${macro.base.toFixed(2)}</div>
+                <div class="mult-stat-label">BASE SENS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Y-Value Preview (first 8 events)</div>
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ORIGINAL Y</th>
+                <th>MODIFIED Y</th>
+                <th>DIFF</th>
+              </tr>
+            </thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Download</div>
+          <button class="download-btn" id="downloadBtn">
+            ⬇ DOWNLOAD ${filename}
+          </button>
+        </div>
+      `;
+
+      const slider = document.getElementById('sensSlider');
+      const sensDisplay = document.getElementById('sensDisplay');
+      const multDisplay = document.getElementById('multDisplay');
+      const sensFill = document.getElementById('sensFill');
+
+      function computeMultiplier(sliderVal) {
+        // sliderVal: 1-100
+        // base is where macro was recorded (e.g. 0.6 = 60)
+        // If slider < base*100: less sensitivity → we need MORE y movement to compensate → multiplier > 1
+        // If slider > base*100: more sensitivity → LESS y movement needed → multiplier < 1
+        // Inverse proportion: multiplier = base_slider / current_slider
+        const basePx = macro.base * 100;
+        return basePx / sliderVal;
+      }
+
+      function updatePreview(multiplier) {
+        const result = parseAndModifyXML(baseXML, multiplier);
+        currentXML = result.xml;
+
+        const tbody = document.getElementById('previewBody');
+        tbody.innerHTML = '';
+        const rows = result.preview.slice(0, 8);
+        rows.forEach((row, i) => {
+          const changed = row.orig !== row.modified;
+          tbody.innerHTML += `
+            <tr>
+              <td style="color:var(--muted)">${i + 1}</td>
+              <td class="y-orig">${row.orig}</td>
+              <td class="${changed ? 'y-changed' : 'y-new'}">${row.modified}</td>
+              <td style="color:var(--muted)">${row.diff !== null ? (row.diff > 0 ? '+' : '') + row.diff : '—'}</td>
+            </tr>
+          `;
+        });
+      }
+
+      function onSliderChange() {
+        const val = parseInt(slider.value);
+        const mult = computeMultiplier(val);
+        currentMultiplier = mult;
+
+        // Color blend low=green, high=red
+        const pct = (val - 1) / 99;
+        const r = Math.round(0 + pct * 255);
+        const g = Math.round(255 - pct * 119);
+        const b = Math.round(136 * (1 - pct));
+        sensDisplay.style.color = `rgb(${r},${g},${b})`;
+        sensDisplay.textContent = val;
+        sensFill.style.width = pct * 100 + '%';
+        multDisplay.textContent = mult.toFixed(2) + '×';
+
+        updatePreview(mult);
+      }
+
+      slider.addEventListener('input', onSliderChange);
+
+      document.getElementById('downloadBtn').addEventListener('click', () => {
+        const blob = new Blob([currentXML], { type: 'application/xml' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+
+      // Initial render
+      onSliderChange();
+    }
+
+    init();
+  </script>
+</body>
+</html>
